@@ -1,0 +1,10 @@
+.env
+.idea
+.vscode
+.DS_Store
+coverage.out
+/my-app
+coverage.raw
+coverage.html
+/reports
+/site

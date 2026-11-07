@@ -1,0 +1,56 @@
+version: "2"
+
+run:
+  build-tags:
+    - integration
+
+linters:
+  default: all
+  disable:
+    # было раньше
+    - lll
+    - nolintlint
+    - prealloc
+    - paralleltest
+    - exhaustruct
+    - nonamedreturns
+    - varnamelen
+    - mnd
+    - promlinter
+    - tagliatelle
+    - dupl
+    - ireturn
+    - tagalign
+    - depguard
+    - dupword
+    # новые версии и устаревшие
+    - exhaustruct_v5
+    - wsl
+    - wsl_v5
+    # глобальные переменные здесь осознанные: tracer, dialect goqu
+    - gochecknoglobals
+    - gomodguard
+    # по желанию: слишком придирчивые
+    - funcorder
+    - noinlineerr
+
+  exclusions:
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: config/config
+        linters:
+          - govet
+      - path: _test\.go
+        linters:
+          - goconst
+          - cyclop
+          - funlen
+          - wrapcheck
+      # не требовать doc-комментарии у каждого экспортируемого символа
+      - linters:
+          - revive
+        text: "(exported|package-comments)"

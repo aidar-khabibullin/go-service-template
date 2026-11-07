@@ -1,0 +1,9 @@
+.git
+.idea
+.vscode
+.DS_Store
+.env
+coverage.out
+grafana
+migration
+*.md

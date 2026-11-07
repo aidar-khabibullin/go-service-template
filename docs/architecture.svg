@@ -1,0 +1,263 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980">
+  <title>layout — architecture</title>
+  <defs>
+    <style>
+      .sans { font-family: Inter, 'SF Pro Text', -apple-system, 'Helvetica Neue', Arial, sans-serif; }
+      .mono { font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace; }
+      .h1   { font-size: 30px; font-weight: 700; fill: #f3f5f7; letter-spacing: -0.5px; }
+      .sub  { font-size: 14px; fill: #8b929c; }
+      .t    { font-size: 17px; font-weight: 600; fill: #eceff2; }
+      .d    { font-size: 12px; fill: #8b929c; }
+      .lbl  { font-size: 13px; fill: #aab0b8; font-weight: 500; }
+      .lbl2 { font-size: 11px; fill: #747b85; }
+      .chip { font-size: 13px; font-weight: 600; fill: #1d2127; }
+      .chipd{ font-size: 10.5px; fill: #5b626b; }
+    </style>
+
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.045"/>
+    </pattern>
+    <radialGradient id="glow" cx="0.42" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="#00add8" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#00add8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#383e47"/>
+      <stop offset="1" stop-color="#30363e"/>
+    </linearGradient>
+    <linearGradient id="hero" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6f8fa"/>
+      <stop offset="1" stop-color="#e9edf1"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="6" stdDeviation="9" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+
+    <marker id="ag" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1.5 1.5 L8.5 5 L1.5 8.5" fill="none" stroke="#9aa1ab" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="ac" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1.5 1.5 L8.5 5 L1.5 8.5" fill="none" stroke="#38c0e6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="ad" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1.5 1.5 L8.5 5 L1.5 8.5" fill="none" stroke="#242a31" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- background -->
+  <rect width="1600" height="980" fill="#1b1e23"/>
+  <rect width="1600" height="980" fill="url(#dots)"/>
+  <rect width="1600" height="980" fill="url(#glow)"/>
+
+  <!-- header -->
+  <text x="60" y="78" class="sans h1">Apple Service</text>
+  <text x="60" y="106" class="sans sub">Go · Clean Architecture · Postgres · Redis · Kafka · OpenTelemetry</text>
+  <rect x="1130" y="58" width="410" height="34" rx="17" fill="none" stroke="#4a515b"/>
+  <text x="1335" y="80" class="mono" font-size="13" fill="#aab0b8" text-anchor="middle">github.com/aidar-khabibullin/go-service-template</text>
+
+  <!-- ===== arrows (under cards) ===== -->
+  <g fill="none" stroke-width="1.6" stroke-linecap="round">
+    <!-- client -> service -->
+    <line x1="170" y1="450" x2="256" y2="450" stroke="#38c0e6" marker-end="url(#ac)"/>
+    <!-- redis <-> service -->
+    <line x1="480" y1="240" x2="480" y2="322" stroke="#9aa1ab" marker-start="url(#ag)" marker-end="url(#ag)"/>
+    <!-- service <-> postgres -->
+    <line x1="480" y1="578" x2="480" y2="660" stroke="#9aa1ab" marker-start="url(#ag)" marker-end="url(#ag)"/>
+    <!-- service -> kafka -->
+    <line x1="704" y1="450" x2="796" y2="450" stroke="#38c0e6" marker-end="url(#ac)"/>
+    <!-- kafka -> consumer -->
+    <line x1="944" y1="450" x2="1046" y2="450" stroke="#38c0e6" marker-end="url(#ac)"/>
+    <!-- consumer -> service (same app) -->
+    <path d="M1245 494 V532 H520 " stroke="#6d747e" stroke-dasharray="2 6" stroke-width="1.3" opacity="0"/>
+    <!-- telemetry -->
+    <path d="M704 540 H752 V672 H796" stroke="#8b929c" stroke-dasharray="6 6" marker-end="url(#ag)"/>
+  </g>
+
+  <!-- arrow labels -->
+  <g class="sans" text-anchor="middle">
+    <text x="213" y="436" class="lbl">HTTP</text>
+    <text x="213" y="474" class="lbl2 mono">REST · JSON</text>
+
+    <text x="750" y="436" class="lbl">outbox</text>
+    <text x="750" y="474" class="lbl2">worker</text>
+
+    <text x="995" y="436" class="lbl">apple-topic</text>
+    <text x="995" y="474" class="lbl2">1 partition</text>
+  </g>
+  <g class="sans">
+    <text x="498" y="278" class="lbl">cache-aside</text>
+    <text x="498" y="296" class="lbl2 mono">apple:{id} · TTL 1h</text>
+    <text x="498" y="616" class="lbl">SQL · pgx · tx</text>
+    <text x="462" y="616" class="lbl2 mono" text-anchor="end">/live · /ready</text>
+    <text x="740" y="616" class="lbl" text-anchor="end">telemetry</text>
+  </g>
+
+  <!-- ===== Client ===== -->
+  <circle cx="110" cy="450" r="60" fill="url(#card)" stroke="#444b55" filter="url(#sh)"/>
+  <g fill="none" stroke="#9aa1ab" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="110" cy="432" r="7"/>
+    <path d="M96 458 C96 448 124 448 124 458"/>
+  </g>
+  <text x="110" y="478" class="sans" font-size="15" font-weight="600" fill="#eceff2" text-anchor="middle">Client</text>
+
+  <!-- ===== Redis ===== -->
+  <g filter="url(#sh)">
+    <rect x="260" y="140" width="440" height="100" rx="14" fill="url(#card)" stroke="#444b55"/>
+  </g>
+  <rect x="286" y="168" width="44" height="44" rx="10" fill="#d82c20"/>
+  <g fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M295 185 L308 179 L321 185 L308 191 Z"/>
+    <path d="M295 192 L308 198 L321 192"/>
+    <path d="M295 199 L308 205 L321 199"/>
+  </g>
+  <text x="346" y="188" class="sans t">Redis</text>
+  <text x="346" y="208" class="mono d">cache · key apple:{id}</text>
+
+  <!-- ===== Apple Service (hero) ===== -->
+  <g filter="url(#sh)">
+    <rect x="260" y="330" width="440" height="240" rx="14" fill="url(#hero)"/>
+  </g>
+  <rect x="284" y="352" width="44" height="44" rx="10" fill="#00add8"/>
+  <text x="306" y="381" class="sans" font-size="18" font-weight="800" fill="#fff" text-anchor="middle">Go</text>
+  <text x="344" y="372" class="sans" font-size="19" font-weight="700" fill="#1d2127">Apple Service</text>
+  <text x="344" y="391" class="mono" font-size="11.5" fill="#5b626b">cmd/app · internal/apple</text>
+
+  <!-- layers row -->
+  <g class="sans">
+    <rect x="284" y="414" width="120" height="52" rx="9" fill="#dde2e8"/>
+    <text x="344" y="437" class="chip" text-anchor="middle">controller</text>
+    <text x="344" y="454" class="chipd mono" text-anchor="middle">http v1 · consumer</text>
+
+    <rect x="440" y="414" width="120" height="52" rx="9" fill="#dde2e8"/>
+    <text x="500" y="437" class="chip" text-anchor="middle">usecase</text>
+    <text x="500" y="454" class="chipd mono" text-anchor="middle">business logic</text>
+
+    <rect x="596" y="414" width="80" height="52" rx="9" fill="#00add8" fill-opacity="0.18" stroke="#00add8" stroke-opacity="0.55"/>
+    <text x="636" y="437" class="chip" text-anchor="middle">entity</text>
+    <text x="636" y="454" class="chipd mono" text-anchor="middle">domain</text>
+  </g>
+  <g fill="none" stroke="#242a31" stroke-width="1.5" stroke-linecap="round">
+    <line x1="406" y1="440" x2="436" y2="440" marker-end="url(#ad)"/>
+    <line x1="562" y1="440" x2="592" y2="440" marker-end="url(#ad)"/>
+  </g>
+
+  <!-- infra row -->
+  <g class="sans">
+    <rect x="284" y="482" width="170" height="52" rx="9" fill="#dde2e8"/>
+    <text x="369" y="505" class="chip" text-anchor="middle">adapters</text>
+    <text x="369" y="522" class="chipd mono" text-anchor="middle">postgres · redis · kafka</text>
+
+    <rect x="470" y="482" width="206" height="52" rx="9" fill="#dde2e8"/>
+    <text x="573" y="505" class="chip" text-anchor="middle">outbox worker</text>
+    <text x="573" y="522" class="chipd mono" text-anchor="middle">FOR UPDATE SKIP LOCKED</text>
+  </g>
+  <text x="480" y="556" class="sans" font-size="10.5" fill="#5b626b" text-anchor="middle">dependencies point inward: controller / adapter → usecase → entity</text>
+
+  <!-- ===== Postgres ===== -->
+  <g filter="url(#sh)">
+    <rect x="260" y="660" width="440" height="100" rx="14" fill="url(#card)" stroke="#444b55"/>
+  </g>
+  <rect x="286" y="688" width="44" height="44" rx="10" fill="#336791"/>
+  <g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="308" cy="701" rx="11" ry="4.5"/>
+    <path d="M297 701 V719 C297 722 302 724.500 308 724.500 C314 724.500 319 722 319 719 V701"/>
+    <path d="M297 710 C297 713 302 715.500 308 715.500 C314 715.500 319 713 319 710"/>
+  </g>
+  <text x="346" y="708" class="sans t">Postgres</text>
+  <text x="346" y="728" class="mono d">apple · pine_apple · outbox</text>
+
+  <!-- ===== Kafka ===== -->
+  <g filter="url(#sh)">
+    <rect x="800" y="414" width="140" height="72" rx="14" fill="url(#card)" stroke="#444b55"/>
+  </g>
+  <g fill="none" stroke="#eceff2" stroke-width="1.9" stroke-linecap="round">
+    <circle cx="830" cy="438" r="4.5"/><circle cx="830" cy="462" r="4.5"/><circle cx="848" cy="450" r="4.5"/>
+    <path d="M833.500 440.500 L844.500 447.500 M833.500 459.500 L844.500 452.500"/>
+  </g>
+  <text x="866" y="456" class="sans" font-size="19" font-weight="600" fill="#eceff2">kafka</text>
+
+  <!-- ===== Consumer ===== -->
+  <g filter="url(#sh)">
+    <rect x="1050" y="410" width="390" height="80" rx="14" fill="url(#card)" stroke="#444b55"/>
+  </g>
+  <text x="1245" y="445" class="sans t" text-anchor="middle">Kafka Consumer</text>
+  <text x="1245" y="466" class="mono d" text-anchor="middle">same app · group apple-group</text>
+
+  <!-- ===== Transactional outbox ===== -->
+  <rect x="800" y="140" width="640" height="190" rx="14" fill="#1f2328" fill-opacity="0.7" stroke="#4a515b"/>
+  <text x="826" y="176" class="sans" font-size="16" font-weight="700" fill="#eceff2">Transactional outbox</text>
+  <g class="mono" font-size="13">
+    <circle cx="834" cy="203" r="10" fill="#00add8" fill-opacity="0.2"/><text x="834" y="207.500" fill="#38c0e6" text-anchor="middle" font-size="11" font-weight="700">1</text>
+    <text x="856" y="208" fill="#b4bac2">tx: INSERT apple + INSERT outbox</text>
+    <circle cx="834" cy="233" r="10" fill="#00add8" fill-opacity="0.2"/><text x="834" y="237.500" fill="#38c0e6" text-anchor="middle" font-size="11" font-weight="700">2</text>
+    <text x="856" y="238" fill="#b4bac2">worker: SELECT … FOR UPDATE SKIP LOCKED</text>
+    <circle cx="834" cy="263" r="10" fill="#00add8" fill-opacity="0.2"/><text x="834" y="267.500" fill="#38c0e6" text-anchor="middle" font-size="11" font-weight="700">3</text>
+    <text x="856" y="268" fill="#b4bac2">send to Kafka, set sent_at, commit</text>
+  </g>
+  <line x1="826" y1="288" x2="1414" y2="288" stroke="#3b424b"/>
+  <text x="826" y="312" class="mono" font-size="12" fill="#747b85">at-least-once delivery · consumers must be idempotent</text>
+
+  <!-- ===== Observability ===== -->
+  <rect x="800" y="560" width="640" height="220" rx="16" fill="none" stroke="#6d747e" stroke-width="1.3" stroke-dasharray="7 6"/>
+  <text x="826" y="592" class="sans" font-size="13" font-weight="600" fill="#8b929c" letter-spacing="1.5">OBSERVABILITY</text>
+
+  <g class="sans">
+    <!-- tempo -->
+    <rect x="824" y="610" width="292" height="72" rx="12" fill="url(#card)" stroke="#444b55"/>
+    <circle cx="852" cy="646" r="14" fill="#425cc7"/>
+    <g fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M845 646 H859 M850 640 V652 M855 641 V651"/>
+    </g>
+    <text x="878" y="642" class="t" font-size="15">OpenTelemetry → Tempo</text>
+    <text x="878" y="662" class="mono d" font-size="11">traces · OTLP gRPC :4317</text>
+
+    <!-- grafana -->
+    <rect x="1132" y="610" width="292" height="72" rx="12" fill="url(#card)" stroke="#444b55"/>
+    <circle cx="1160" cy="646" r="14" fill="#f46800"/>
+    <circle cx="1160" cy="646" r="6" fill="none" stroke="#fff" stroke-width="2.4"/>
+    <text x="1186" y="642" class="t" font-size="15">Grafana</text>
+    <text x="1186" y="662" class="mono d" font-size="11">dashboards · :3000</text>
+
+    <!-- prometheus -->
+    <rect x="824" y="696" width="292" height="72" rx="12" fill="url(#card)" stroke="#444b55"/>
+    <circle cx="852" cy="732" r="14" fill="#e6522c"/>
+    <path d="M852 724 C849 728 849 731 851 733 C848 733 846 735 847 738 H857 C858 735 856 733 853 733 C855 731 855 728 852 724 Z" fill="#fff"/>
+    <text x="878" y="728" class="t" font-size="15">Prometheus</text>
+    <text x="878" y="748" class="mono d" font-size="11">metrics · scrape app:8001</text>
+
+    <!-- sentry -->
+    <rect x="1132" y="696" width="292" height="72" rx="12" fill="url(#card)" stroke="#444b55"/>
+    <circle cx="1160" cy="732" r="14" fill="#6c5fc7"/>
+    <path d="M1152 739 L1160 724 L1168 739 M1155 741 H1165" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1186" y="728" class="t" font-size="15">Sentry</text>
+    <text x="1186" y="748" class="mono d" font-size="11">errors · optional</text>
+  </g>
+
+  <!-- ===== CI & reports ===== -->
+  <rect x="60" y="808" width="1380" height="100" rx="14" fill="#1f2328" fill-opacity="0.7" stroke="#4a515b"/>
+  <text x="84" y="838" class="sans" font-size="12" font-weight="600" fill="#8b929c" letter-spacing="1.5">CI · GITHUB ACTIONS</text>
+  <g class="mono" font-size="11.5" fill="#cfd4da" text-anchor="middle">
+    <rect x="84" y="854" width="180" height="38" rx="9" fill="url(#card)" stroke="#444b55"/><text x="174" y="878">lint · golangci-lint</text>
+    <rect x="276" y="854" width="180" height="38" rx="9" fill="url(#card)" stroke="#444b55"/><text x="366" y="878">test · unit + integr.</text>
+    <rect x="468" y="854" width="180" height="38" rx="9" fill="url(#card)" stroke="#444b55"/><text x="558" y="878">vuln · govulncheck</text>
+    <rect x="660" y="854" width="180" height="38" rx="9" fill="url(#card)" stroke="#444b55"/><text x="750" y="878">build · docker image</text>
+  </g>
+  <line x1="846" y1="873" x2="908" y2="873" stroke="#38c0e6" stroke-width="1.6" marker-end="url(#ac)"/>
+  <text x="924" y="838" class="sans" font-size="12" font-weight="600" fill="#8b929c" letter-spacing="1.5">REPORTS · GITHUB PAGES</text>
+  <g class="sans" font-size="12.5" font-weight="500" fill="#cfd4da" text-anchor="middle">
+    <rect x="924" y="854" width="158" height="38" rx="9" fill="url(#card)" stroke="#444b55"/><text x="1003" y="878">Coverage report</text>
+    <rect x="1094" y="854" width="158" height="38" rx="9" fill="url(#card)" stroke="#444b55"/><text x="1173" y="878">Test report</text>
+    <rect x="1264" y="854" width="158" height="38" rx="9" fill="url(#card)" stroke="#444b55"/><text x="1343" y="878">Lint report</text>
+  </g>
+
+  <!-- ===== legend ===== -->
+  <g class="sans" font-size="12" fill="#8b929c">
+    <line x1="60" y1="946" x2="96" y2="946" stroke="#38c0e6" stroke-width="1.6" marker-end="url(#ac)"/>
+    <text x="108" y="950">request / event flow</text>
+    <line x1="270" y1="946" x2="306" y2="946" stroke="#9aa1ab" stroke-width="1.6" marker-start="url(#ag)" marker-end="url(#ag)"/>
+    <text x="318" y="950">storage access</text>
+    <line x1="450" y1="946" x2="486" y2="946" stroke="#8b929c" stroke-width="1.6" stroke-dasharray="6 6"/>
+    <text x="498" y="950">telemetry</text>
+    <text x="1540" y="950" text-anchor="end" class="mono">make up · docker compose</text>
+  </g>
+</svg>

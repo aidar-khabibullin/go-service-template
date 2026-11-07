@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+          install-only: true
+      - name: Lint
+        run: |
+          mkdir -p reports/lint
+          golangci-lint run > reports/lint/lint.txt 2>&1 && echo 0 > reports/lint/lint.status || echo 1 > reports/lint/lint.status
+          cat reports/lint/lint.txt
+          [ "$(cat reports/lint/lint.status)" = 0 ]
+      # отчёт нужен и когда линтер упал
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint-report
+          path: reports/lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      # ubuntu-latest has Docker, so testcontainers can start Postgres and Redis.
+      # Один прогон: unit + integration, -race, покрытие только по internal/.
+      - name: Tests (unit + integration) with coverage
+        run: |
+          mkdir -p reports/test
+          go test -tags integration -race -count=1 -json \
+            -covermode=atomic -coverprofile=reports/test/coverage.raw -coverpkg=./internal/... \
+            ./... > reports/test/test.json && echo 0 > reports/test/test.status || echo 1 > reports/test/test.status
+          [ "$(cat reports/test/test.status)" = 0 ]
+      - name: Coverage report
+        if: always()
+        run: |
+          [ -f reports/test/coverage.raw ] || exit 0
+          # не считаем fakes, test-хелперы и точку входа
+          grep -Ev '/(usecasetest|itest)/|/cmd/|_test\.go' reports/test/coverage.raw > reports/test/coverage.out || true
+          go tool cover -html=reports/test/coverage.out -o reports/test/coverage.html || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: |
+            reports/test/test.json
+            reports/test/test.status
+            reports/test/coverage.out
+            reports/test/coverage.html
+
+  vuln:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t my-app .
+
+  # Собирает HTML-отчёты (coverage / tests / lint) и обновляет бейдж в README.
+  reports:
+    needs: [lint, test]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: lint-report
+          path: reports/lint
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: test-report
+          path: reports/test
+      - name: Build reports
+        run: python3 .github/scripts/build_reports.py --reports reports --site site --readme README.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reports-site
+          path: site
+      - name: Commit coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          if ! git diff --quiet README.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "chore: update coverage badge [skip ci]"
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          path: site
+
+  deploy:
+    needs: reports
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
