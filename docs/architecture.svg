@@ -223,7 +223,7 @@
     <circle cx="852" cy="732" r="14" fill="#e6522c"/>
     <path d="M852 724 C849 728 849 731 851 733 C848 733 846 735 847 738 H857 C858 735 856 733 853 733 C855 731 855 728 852 724 Z" fill="#fff"/>
     <text x="878" y="728" class="t" font-size="15">Prometheus</text>
-    <text x="878" y="748" class="mono d" font-size="11">metrics · scrape app:8001</text>
+    <text x="878" y="748" class="mono d" font-size="11">metrics · app:8001/metrics</text>
 
     <!-- sentry -->
     <rect x="1132" y="696" width="292" height="72" rx="12" fill="url(#card)" stroke="#444b55"/>
