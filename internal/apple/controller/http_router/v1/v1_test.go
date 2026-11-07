@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-chi/chi/v5"
 	v1 "github.com/aidar-khabibullin/go-service-template/internal/apple/controller/http_router/v1"
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/entity"
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/usecase/usecasetest"
+	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 )
 

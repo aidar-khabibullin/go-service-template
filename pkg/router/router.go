@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aidar-khabibullin/go-service-template/pkg/metrics"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog/log"
@@ -20,6 +21,8 @@ type Check struct {
 
 func New(readiness ...Check) *chi.Mux {
 	r := chi.NewRouter()
+	// metrics goes first so a panic recovered below is still counted as a 500
+	r.Use(metrics.Middleware)
 	r.Use(middleware.Recoverer)
 
 	r.Get("/live", live)

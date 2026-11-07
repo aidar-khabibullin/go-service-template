@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/doug-martin/goqu/v9"
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/entity"
 	"github.com/aidar-khabibullin/go-service-template/pkg/otel/tracer"
+	"github.com/doug-martin/goqu/v9"
 )
 
 func (p *Postgres) UpdateApple(ctx context.Context, a entity.Apple) error {

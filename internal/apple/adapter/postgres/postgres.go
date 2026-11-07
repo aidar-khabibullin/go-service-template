@@ -3,9 +3,9 @@ package postgres
 import (
 	"context"
 
+	"github.com/aidar-khabibullin/go-service-template/pkg/transaction"
 	"github.com/doug-martin/goqu/v9"
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres" // registers the "postgres" dialect ($1 placeholders)
-	"github.com/aidar-khabibullin/go-service-template/pkg/transaction"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

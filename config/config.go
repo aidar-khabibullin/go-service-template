@@ -10,6 +10,7 @@ import (
 	"github.com/aidar-khabibullin/go-service-template/pkg/kafka_reader"
 	"github.com/aidar-khabibullin/go-service-template/pkg/kafka_writer"
 	"github.com/aidar-khabibullin/go-service-template/pkg/logger"
+	"github.com/aidar-khabibullin/go-service-template/pkg/metrics"
 	"github.com/aidar-khabibullin/go-service-template/pkg/otel"
 	"github.com/aidar-khabibullin/go-service-template/pkg/postgres"
 	"github.com/aidar-khabibullin/go-service-template/pkg/redis"
@@ -28,6 +29,7 @@ type App struct {
 type Config struct {
 	App         App
 	HTTP        http_server.Config
+	Metrics     metrics.Config
 	Postgres    postgres.Config
 	KafkaReader kafka_reader.Config
 	KafkaWriter kafka_writer.Config

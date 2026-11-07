@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/usecase"
+	"github.com/aidar-khabibullin/go-service-template/pkg/metrics"
 	"github.com/rs/zerolog/log"
 )
 
@@ -21,6 +22,7 @@ func OutboxWorker(ctx context.Context, uc *usecase.UseCase, interval time.Durati
 			sent, err := uc.SendOutbox(ctx)
 			if err != nil {
 				if ctx.Err() == nil {
+					metrics.OutboxError()
 					log.Error().Err(err).Msg("worker.OutboxWorker: uc.SendOutbox")
 				}
 

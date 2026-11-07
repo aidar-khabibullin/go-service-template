@@ -6,6 +6,7 @@ import (
 
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/usecase"
 	"github.com/aidar-khabibullin/go-service-template/pkg/kafka_reader"
+	"github.com/aidar-khabibullin/go-service-template/pkg/metrics"
 	"github.com/rs/zerolog/log"
 )
 
@@ -20,6 +21,8 @@ func AppleConsumer(ctx context.Context, reader *kafka_reader.Reader, _ *usecase.
 
 			return
 		}
+
+		metrics.KafkaConsumed(m.Topic)
 
 		// UseCase call here
 

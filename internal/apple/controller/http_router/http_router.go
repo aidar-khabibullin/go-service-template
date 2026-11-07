@@ -1,9 +1,9 @@
 package http_router
 
 import (
-	"github.com/go-chi/chi/v5"
 	ver1 "github.com/aidar-khabibullin/go-service-template/internal/apple/controller/http_router/v1"
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/usecase"
+	"github.com/go-chi/chi/v5"
 	"github.com/riandyrn/otelchi"
 )
 

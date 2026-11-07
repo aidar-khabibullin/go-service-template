@@ -46,6 +46,10 @@ migration          SQL-миграции (golang-migrate)
 - **Удаление мягкое** (`deleted_at`).
 - **Graceful shutdown.** По SIGINT/SIGTERM: останавливается HTTP-сервер (доработка текущих запросов),
   затем воркеры и consumer, и только после этого закрываются адаптеры.
+- **Метрики.** Prometheus-метрики отдаются отдельно от API на `:8001/metrics` (`METRICS_PORT`):
+  `http_requests_total` и `http_request_duration_seconds` (по шаблону маршрута, не по сырому пути),
+  `outbox_events_sent_total`, `outbox_send_errors_total`, `kafka_consumed_messages_total`, плюс `go_*`/`process_*`.
+  Порт не публикуйте наружу. Prometheus (`grafana/prometheus.yaml`) собирает их с `app:8001`.
 - **Probes.** `/live` — процесс жив; `/ready` — проверяет Postgres и Redis.
 
 ## HTTP API

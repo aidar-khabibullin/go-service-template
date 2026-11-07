@@ -3,14 +3,15 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"github.com/aidar-khabibullin/go-service-template/config"
 	"github.com/aidar-khabibullin/go-service-template/pkg/http_server"
 	"github.com/aidar-khabibullin/go-service-template/pkg/kafka_reader"
 	"github.com/aidar-khabibullin/go-service-template/pkg/kafka_writer"
+	"github.com/aidar-khabibullin/go-service-template/pkg/metrics"
 	"github.com/aidar-khabibullin/go-service-template/pkg/postgres"
 	"github.com/aidar-khabibullin/go-service-template/pkg/redis"
 	"github.com/aidar-khabibullin/go-service-template/pkg/router"
+	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"
 	"os"
 	"os/signal"
@@ -73,6 +74,7 @@ func Run(ctx context.Context, c config.Config) (err error) {
 	AppleDomain(ctx, c, deps, &wg)
 
 	httpServer := http_server.New(deps.RouterHTTP, c.HTTP.Port)
+	metricsServer := http_server.New(metrics.Handler(), c.Metrics.Port)
 
 	log.Info().Msg("App started!")
 
@@ -88,6 +90,7 @@ func Run(ctx context.Context, c config.Config) (err error) {
 	// Graceful shutdown: stop accepting requests and finish in-flight ones,
 	// then stop workers/consumers; adapters are closed last by the defers above.
 	httpServer.Close(context.WithoutCancel(ctx))
+	metricsServer.Close(context.WithoutCancel(ctx))
 	stop()
 	wg.Wait()
 

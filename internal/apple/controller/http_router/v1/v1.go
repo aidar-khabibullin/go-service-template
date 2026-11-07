@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/entity"
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/usecase"
+	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"go.opentelemetry.io/otel/trace"

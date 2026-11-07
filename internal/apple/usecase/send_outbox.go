@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/aidar-khabibullin/go-service-template/internal/apple/entity"
+	"github.com/aidar-khabibullin/go-service-template/pkg/metrics"
 	"github.com/aidar-khabibullin/go-service-template/pkg/otel/tracer"
 	"github.com/google/uuid"
 )
@@ -45,6 +46,8 @@ func (u *UseCase) SendOutbox(ctx context.Context) (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf("u.tx.Do: %w", err)
 	}
+
+	metrics.OutboxSent(sent)
 
 	return sent, nil
 }
