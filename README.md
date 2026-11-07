@@ -1,6 +1,6 @@
 # go-service-template
 
-![Coverage](https://img.shields.io/badge/Coverage-72.0%25-green)
+![Coverage](https://img.shields.io/badge/Coverage-71.5%25-green)
 [![CI](https://github.com/aidar-khabibullin/go-service-template/actions/workflows/ci.yml/badge.svg)](https://github.com/aidar-khabibullin/go-service-template/actions/workflows/ci.yml)
 
 📊 **Отчёты о качестве кода** (обновляются на каждый push в `main`):
