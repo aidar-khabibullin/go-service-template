@@ -1,6 +1,6 @@
 module github.com/aidar-khabibullin/go-service-template
 
-go 1.26.0
+go 1.26.10
 
 require (
 	github.com/doug-martin/goqu/v9 v9.25.0
